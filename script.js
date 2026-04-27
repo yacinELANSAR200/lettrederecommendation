@@ -420,7 +420,7 @@ function updatePreview() {
       <p><strong>${esc(nomStagiaire)}</strong> a fait preuve d'un grand sérieux et d'un engagement remarquable dans la préparation et l'animation de ses séances. ${ileElle()} a su concevoir des situations d'apprentissage adaptées au niveau des élèves, en intégrant efficacement les outils numériques et les TIC.</p>
 
       <p>Sur le plan pédagogique, ${ilelle()} a démontré de solides compétences dans le domaine de l'enseignement, notamment :</p>
-      <ul style="margin: 0.5rem 0 1rem 1.5rem; line-height:1.9;">${compsHtml}</ul>
+      <ul>${compsHtml}</ul>
 
       <p>${ileElle()} a su mettre en œuvre des pratiques pédagogiques efficaces, adaptées aux besoins des élèves, favorisant leur compréhension, leur participation et leur réussite.</p>
 
@@ -453,22 +453,7 @@ function updatePreview() {
 // ACTIONS
 // ══════════════════════════════════════════
 function printLetter() {
-  const element = document.getElementById('letter-preview');
-  const nomStagiaire = document.getElementById('stagiaire-select').value || 'lettre-recommandation';
-  element.style.fontSize = '12px';
-  element.style.lineHeight = '1.4';
-  const opt = {
-    margin: 10,
-    filename: `${nomStagiaire.replace(/\s+/g, '_')}_recommandation.pdf`,
-    image: { type: 'jpeg', quality: 0.95 },
-    html2canvas: { scale: 2, useCORS: true, logging: false },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-  };
-  html2pdf().set(opt).from(element).save().then(() => {
-    element.style.fontSize = '';
-    element.style.lineHeight = '';
-  });
+  window.print();
 }
 
 function copyText() {
@@ -485,6 +470,19 @@ function copyText() {
     document.body.removeChild(ta);
     showToast('Lettre copiée !');
   }
+}
+
+function onLetterEdited() {
+  // Fonction appelée quand l'utilisateur modifie le texte directement
+}
+
+let isEditMode = false;
+function toggleEditMode() {
+  isEditMode = !isEditMode;
+  const preview = document.getElementById('letter-preview');
+  preview.contentEditable = isEditMode;
+  preview.classList.toggle('editable', isEditMode);
+  showToast(isEditMode ? 'Mode édition activé - Vous pouvez modifier le texte' : 'Mode édition désactivé');
 }
 
 function resetForm() {
